@@ -1,0 +1,14 @@
+streamlit
+numpy
+pandas
+scikit-learn
+streamlit-option-menu
+lux-api
+streamlit-pandas-prodiling
+matplotlib
+io
+pathlib
+mlxtend
+sklearn
+statsmodels
+scipy
