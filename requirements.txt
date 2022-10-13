@@ -6,8 +6,6 @@ streamlit-option-menu
 lux-api
 streamlit-pandas-profiling
 matplotlib
-io
-pathlib
 mlxtend
 sklearn
 statsmodels
