@@ -4,7 +4,7 @@ pandas
 scikit-learn
 streamlit-option-menu
 lux-api
-streamlit-pandas-prodiling
+streamlit-pandas-profiling
 matplotlib
 io
 pathlib
