@@ -86,9 +86,6 @@ if selected == "Limpieza":
       df.columns = df.columns.str.replace("ó", "o")
       df.columns = df.columns.str.replace("ú", "u")
       df.columns = df.columns.str.replace("$.", "")
-      
-      df.replace(columns = {'test':'TEST', 'odi':'ODI',
-                              't20':'T20'}, inplace = True)
 
       #La primera letra de cada palabra se pone en mayuscula para mayor estetica
       for x in df.columns:
