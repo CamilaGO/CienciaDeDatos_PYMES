@@ -66,8 +66,7 @@ if selected == "Limpieza":
       for x in df.columns:
         if df[x].dtype == 'object':
           df[x] = df[x].str.lower()
-          df[x] = df[x].str.replace('\W', '', regex=True) #se elimina todos los caracteres no alfabeticos
-          
+
       # Como se ha observado todos los nombres tienen una secuencia de ';;;;;;;' al final que posiblemente fue un error al momento de 
       # guardar los datos. Procederemos a eliminar dichos caracteres y letras con tildes, el simbolo de dolar y la ñ
       df.replace(regex={';': '', 
