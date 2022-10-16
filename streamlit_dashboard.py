@@ -47,15 +47,16 @@ selected = option_menu(menu_title = None,
 if selected == "Limpieza":
   # ------------------ Bienvenida y Load Data Set ---------------------------
   st.title("Limpieza de Datos")
-  uploaded_file = st.file_uploader("Sube tu archivo .csv o .xlsx")
+  uploaded_file = st.file_uploader("Sube tu archivo .csv")
 
-  if uploaded_file is not None:
-      # evaluar si es .csv o .xlsx y cargar los datos a un data frame
-      if ".csv" in uploaded_file.name:
-        df = pd.read_csv(uploaded_file, encoding = 'latin-1') # load it with csv
+  if uploaded_file is not None and ".csv" in uploaded_file.name:
+      # evaluar si es .csv y cargar los datos a un data frame
+      df = pd.read_csv(uploaded_file, encoding = 'latin-1') # load it with csv
+      #if ".csv" in uploaded_file.name:
+      #  df = pd.read_csv(uploaded_file, encoding = 'latin-1') # load it with csv
         #st.write(df)
-      else:
-        df = pd.read_excel(uploaded_file)
+      #else:
+      #  df = pd.read_excel(uploaded_file)
       
       # ------------------  Limpiar dataframe ------------------
       if 'Unnamed: 0' in df.columns:
@@ -67,7 +68,7 @@ if selected == "Limpieza":
           df[x] = df[x].str.lower()
       
       # Como se ha observado todos los nombres tienen una secuencia de ';;;;;;;' al final que posiblemente fue un error al momento de 
-      # guardar los datos. Procederemos a eliminar dichos caracteres y letras con tildes, el simbolo de la moneda y la ñ
+      # guardar los datos. Procederemos a eliminar dichos caracteres y letras con tildes, el simbolo de dolar y la ñ
       df.replace(regex={';': '', 
                         'ñ': 'n',
                         'á': 'a',
@@ -76,6 +77,18 @@ if selected == "Limpieza":
                         'ó': 'o',
                         'ú': 'u',
                         '$.': ''} ,inplace=True)
+      # tambien se eliminan dichos caracteres en los nombres de las columnas
+      df.columns = df.columns.str.replace(";", "")
+      df.columns = df.columns.str.replace("ñ", "n")
+      df.columns = df.columns.str.replace("á", "a")
+      df.columns = df.columns.str.replace("é", "e")
+      df.columns = df.columns.str.replace("í", "i")
+      df.columns = df.columns.str.replace("ó", "o")
+      df.columns = df.columns.str.replace("ú", "u")
+      df.columns = df.columns.str.replace("$.", "")
+      
+      df.replace(columns = {'test':'TEST', 'odi':'ODI',
+                              't20':'T20'}, inplace = True)
 
       #La primera letra de cada palabra se pone en mayuscula para mayor estetica
       for x in df.columns:
@@ -124,7 +137,7 @@ if selected == "Limpieza":
       )
   else:
    # si no sube archivo de datos para limpiar
-    st.warning("Por favor, sube tu archivo antes de continuar")
+    st.warning("Por favor, sube tu archivo .csv antes de continuar")
 
 elif selected == "Exploración":
   # ------------------ Bienvenida y Load Data Set ---------------------------
