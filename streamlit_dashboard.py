@@ -117,8 +117,6 @@ if selected == "Limpieza":
       df.to_pandas()
       st.markdown('Conjunto de datos limpios')
       st.write(df, df.shape)
-      st.write(df)
-      st.write(df.shape)
 
       buffer = io.StringIO()
       df.info(buf=buffer)
