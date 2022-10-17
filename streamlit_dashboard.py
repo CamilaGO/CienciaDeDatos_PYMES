@@ -69,7 +69,7 @@ if selected == "Limpieza":
       s = buffer.getvalue()
       st.text(s)
       # tipos de datos
-      st.write(df.dtypes)
+      st.table(df.dtypes)
       # estadisticas basicas
       st.write("Estadisticas básicas de las columnas numéricas", df.describe())
       st.write("Estadisticas básicas de todas las columnas", df.describe(include=object))
@@ -87,7 +87,7 @@ if selected == "Limpieza":
       )
       # contar valores unicos
       st.write('Valores únicos en la columna seleccionada: ',df[var_explore].value_counts())
-      st.table(df[var_explore].value_counts())
+      st.table(df[var_explore].value_counts().head())
 
       # ------------------  Limpiar dataframe ------------------
       st.text("")
@@ -203,6 +203,11 @@ if selected == "Limpieza":
           df.to_pandas()
           st.markdown('Conjunto de datos limpios:')
           st.write(df)
+          # informacion del dataframe
+          buffer = io.StringIO()
+          df.info(buf=buffer)
+          s = buffer.getvalue()
+          st.text(s)
 
           csv_clean = convert_df(df)
           st.download_button(
