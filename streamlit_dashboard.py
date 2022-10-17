@@ -68,8 +68,6 @@ if selected == "Limpieza":
       df.info(buf=buffer)
       s = buffer.getvalue()
       st.text(s)
-      # tipos de datos
-      st.table(df.dtypes)
       # estadisticas basicas
       st.write("Estadisticas básicas de las columnas numéricas", df.describe())
       st.write("Estadisticas básicas de todas las columnas", df.describe(include=object))
