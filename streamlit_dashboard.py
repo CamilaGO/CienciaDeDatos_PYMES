@@ -81,12 +81,13 @@ if selected == "Limpieza":
       # seleccionar la variable a enfocarse en la exploracion
       st.text("")
       st.info('Exploración específica')
-      var_explore = st.multiselect(
+      var_explore = st.selectbox(
           "Selecciona una variable para enfocar la exploración: ",
           list(df.columns)
       )
       # contar valores unicos
       st.write('Valores únicos en la columna seleccionada: ',df[var_explore].value_counts())
+      st.table(df[var_explore].value_counts())
 
       # ------------------  Limpiar dataframe ------------------
       st.text("")
@@ -113,31 +114,43 @@ if selected == "Limpieza":
                           'Ä': 'A','Ë': 'E','Ï': 'I','Ö': 'O','Ü': 'U',
                           'Ã': 'A','Ẽ': 'E', 'Õ':'O'} ,inplace=True)
                           
-        # tambien se eliminan dichos caracteres en los nombres de las columnas
-        special_charac = [';', '', 'ñ', 'n', '$.', '', 'Ñ', 'N', '#','', '&','', '%','', '~','', '`','',
-                          'á', 'a','é', 'e','í', 'i','ó', 'o','ú', 'u',
-                          'ä', 'a','ë', 'e','ï', 'i','ö', 'o','ü', 'u',
-                          'ã', 'a','ẽ', 'e','õ', 'o',
-                          'Á', 'A','É', 'E','Í', 'I','Ó', 'O','Ú', 'U',
-                          'Ä', 'A','Ë', 'E','Ï', 'I','Ö', 'O','Ü', 'U',
-                          'Ã', 'A','Ẽ', 'E', 'Õ','O']
-        for i in special_charac:
-          df.columns = df.columns.str.replace(special_charac[i], special_charac[i+1])
-          i = i + 2
-        """df.columns = df.columns.str.replace(";", "")
+        # tambien se eliminan dichos caracteres en los nombres de las columnas        
+        df.columns = df.columns.str.replace(";", "")
         df.columns = df.columns.str.replace("ñ", "n")
+        df.columns = df.columns.str.replace("$.", "")
+        df.columns = df.columns.str.replace("Ñ", "N")
+        df.columns = df.columns.str.replace("#", "n")
+        df.columns = df.columns.str.replace("%", "")
+        df.columns = df.columns.str.replace('`','')
+        df.columns = df.columns.str.replace('&','',)
+
         df.columns = df.columns.str.replace("á", "a")
         df.columns = df.columns.str.replace("é", "e")
         df.columns = df.columns.str.replace("í", "i")
         df.columns = df.columns.str.replace("ó", "o")
         df.columns = df.columns.str.replace("ú", "u")
-        df.columns = df.columns.str.replace("Ñ", "n")
+        df.columns = df.columns.str.replace('ä', 'a')
+        df.columns = df.columns.str.replace('ë', 'e')
+        df.columns = df.columns.str.replace('ï', 'i')
+        df.columns = df.columns.str.replace('ö', 'o')
+        df.columns = df.columns.str.replace('ü', 'u')
+        df.columns = df.columns.str.replace('ã', 'a')
+        df.columns = df.columns.str.replace('ẽ', 'e')
+        df.columns = df.columns.str.replace('õ', 'o')
+
         df.columns = df.columns.str.replace("Á", "a")
         df.columns = df.columns.str.replace("É", "e")
         df.columns = df.columns.str.replace("Í", "i")
         df.columns = df.columns.str.replace("Ó", "o")
-        df.columns = df.columns.str.replace("Ú", "u")
-        df.columns = df.columns.str.replace("$.", "")"""
+        df.columns = df.columns.str.replace("Ú", "u") 
+        df.columns = df.columns.str.replace('Ä', 'A')
+        df.columns = df.columns.str.replace('É', 'E')
+        df.columns = df.columns.str.replace('Í', 'I')
+        df.columns = df.columns.str.replace('Ó', 'O')
+        df.columns = df.columns.str.replace('Ú', 'U')
+        df.columns = df.columns.str.replace('Ã', 'A')
+        df.columns = df.columns.str.replace('Ẽ', 'E')
+        df.columns = df.columns.str.replace('Õ','O')
     
       if (limp_2):
         # se pasa todo a minuscula
