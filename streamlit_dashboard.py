@@ -52,87 +52,158 @@ if selected == "Limpieza":
   if uploaded_file is not None and ".csv" in uploaded_file.name:
       # evaluar si es .csv y cargar los datos a un data frame
       df = pd.read_csv(uploaded_file, encoding = 'latin-1') # load it with csv
-      #if ".csv" in uploaded_file.name:
-      #  df = pd.read_csv(uploaded_file, encoding = 'latin-1') # load it with csv
-        #st.write(df)
-      #else:
-      #  df = pd.read_excel(uploaded_file)
       
-      # ------------------  Limpiar dataframe ------------------
       if 'Unnamed: 0' in df.columns:
         df.drop('Unnamed: 0', inplace=True, axis=1)
 
-      # se pasa todo a minuscula
-      for x in df.columns:
-        if df[x].dtype == 'object':
-          df[x] = df[x].str.lower()
-
-      # Como se ha observado todos los nombres tienen una secuencia de ';;;;;;;' al final que posiblemente fue un error al momento de 
-      # guardar los datos. Procederemos a eliminar dichos caracteres y letras con tildes, el simbolo de dolar y la ñ
-      df.replace(regex={';': '', 
-                        'ñ': 'n',
-                        'á': 'a',
-                        'é': 'e',
-                        'í': 'i',
-                        'ó': 'o',
-                        'ú': 'u',
-                        '$.': '',
-                        'ã': 'a',
-                        'ẽ': 'e'} ,inplace=True)
-                         
-      # tambien se eliminan dichos caracteres en los nombres de las columnas
-      df.columns = df.columns.str.replace(";", "")
-      df.columns = df.columns.str.replace("ñ", "n")
-      df.columns = df.columns.str.replace("á", "a")
-      df.columns = df.columns.str.replace("é", "e")
-      df.columns = df.columns.str.replace("í", "i")
-      df.columns = df.columns.str.replace("ó", "o")
-      df.columns = df.columns.str.replace("ú", "u")
-      df.columns = df.columns.str.replace("$.", "")
-
-      #La primera letra de cada palabra se pone en mayuscula para mayor estetica
-      for x in df.columns:
-        if df[x].dtype == 'object':
-          df[x] = df[x].str.title()
-
+      st.success('Datos cargados! 🎉')
+      # ------------------  Explorar dataframe ------------------
+      # ___________ exploracion general ___________
+      st.text("")
+      st.info('Exploración general')
       df.to_pandas()
-      st.write(df)
-
-      # se pide el nombre de la variable que contiene el monto vendido
-      monto_var = st.text_input('Variable de monto vendido')
-      # Convertimos la variable a tipo numérico (int64) ya que es tipo texto (object)
-      if not monto_var:
-        st.warning("Porfavor llena los campos requeridos")
-      else:
-        df[monto_var].replace(regex={'Q.': ''} ,inplace=True)
-        df[monto_var] = pd.to_numeric(df[monto_var])
-
-      # se pide el nombre de la variable que contiene la fecha
-      fecha_var = st.text_input('Variable de la fecha de venta')
-      # Convertimos la variable a tipo date (ns) ya que es tipo texto (object)
-      if not fecha_var:
-        st.warning("Porfavor llena los campos requeridos")
-      else:
-        df[fecha_var] = pd.to_datetime(df[fecha_var])
-
-      # se eliminan todas las filas con valores NaN
-      df = df.dropna()
-      df.to_pandas()
-      st.markdown('Conjunto de datos limpios')
-      st.write(df, df.shape)
-
+      st.write(df.head(), df.shape) # primeras 5 filas del dataframe y sus dimensiones
+      # informacion del dataframe
       buffer = io.StringIO()
       df.info(buf=buffer)
       s = buffer.getvalue()
       st.text(s)
-
-      csv_clean = convert_df(df)
-      st.download_button(
-          label="Descargar datos limpios",
-          data=csv_clean,
-          file_name='datosLimpios.csv',
-          mime='text/csv',
+      # tipos de datos
+      st.write(df.dtypes)
+      # estadisticas basicas
+      st.write("Estadisticas básicas de las columnas numéricas", df.describe())
+      st.write("Estadisticas básicas de todas las columnas", df.describe(include=object))
+      #filas duplicadas
+      st.write("Total de filas duplicadas: ", df.duplicated().sum())
+      # filas con valores nulos
+      st.write("Total de filas con valores nulos: ", np.count_nonzero(df.isnull()))
+      # ___________ exploracion enfocada en una variable ___________
+      # seleccionar la variable a enfocarse en la exploracion
+      st.text("")
+      st.info('Exploración específica')
+      var_explore = st.multiselect(
+          "Selecciona una variable para enfocar la exploración: ",
+          list(df.columns)
       )
+      # contar valores unicos
+      st.write('Valores únicos en la columna seleccionada: ',df[var_explore].value_counts())
+
+      # ------------------  Limpiar dataframe ------------------
+      st.text("")
+      st.info('¡Limpieza de datos!')
+      st.write('Selecciona las técnicas de limpieza que deseas realizar:')
+      limp_1 = st.checkbox('Eliminar caracteres especiales')
+      limp_2 = st.checkbox('Cambiar mayúsculas a minúsuclas')
+      limp_3 = st.checkbox('Convertir en mayúscula la primera letra de cada palabra')
+      limp_4 = st.checkbox('Eliminar filas duplicadas')
+      limp_5 = st.checkbox('Eliminar valores nulos')
+      limp_6 = st.checkbox('Cambiar los tipos de datos')
+      cont_limpieza = 0
+      suma_limp = limp_1 + limp_2 + limp_3 + limp_4 + limp_5 + limp_6
+      if (limp_1):
+        # se eliminan los caracteres especiales
+        # Como se ha observado todos los nombres tienen una secuencia de ';;;;;;;' al final que posiblemente fue un error al momento de 
+        # guardar los datos. Procederemos a eliminar dichos caracteres y letras con tildes, el simbolo de dolar y la ñ
+        df.replace(regex={';': '', 'ñ': 'n', '$.': '', 'Ñ': 'N', '#':'', '&':'', '%':'', '~':'', '`':'',
+
+                          'á': 'a','é': 'e','í': 'i','ó': 'o','ú': 'u',
+                          'ä': 'a','ë': 'e','ï': 'i','ö': 'o','ü': 'u',
+                          'ã': 'a','ẽ': 'e','õ': 'o',
+                          
+                          'Á': 'A','É': 'E','Í': 'I','Ó': 'O','Ú': 'U',
+                          'Ä': 'A','Ë': 'E','Ï': 'I','Ö': 'O','Ü': 'U',
+                          'Ã': 'A','Ẽ': 'E', 'Õ':'O'} ,inplace=True)
+                          
+        # tambien se eliminan dichos caracteres en los nombres de las columnas
+        special_charac = [';', '', 'ñ', 'n', '$.', '', 'Ñ', 'N', '#','', '&','', '%','', '~','', '`','',
+                          'á', 'a','é', 'e','í', 'i','ó', 'o','ú', 'u',
+                          'ä', 'a','ë', 'e','ï', 'i','ö', 'o','ü', 'u',
+                          'ã', 'a','ẽ', 'e','õ', 'o',
+                          'Á', 'A','É', 'E','Í', 'I','Ó', 'O','Ú', 'U',
+                          'Ä', 'A','Ë', 'E','Ï', 'I','Ö', 'O','Ü', 'U',
+                          'Ã', 'A','Ẽ', 'E', 'Õ','O']
+        for i in special_charac:
+          df.columns = df.columns.str.replace(special_charac[i], special_charac[i+1])
+          i = i + 2
+        cont_limpieza += 1
+        """df.columns = df.columns.str.replace(";", "")
+        df.columns = df.columns.str.replace("ñ", "n")
+        df.columns = df.columns.str.replace("á", "a")
+        df.columns = df.columns.str.replace("é", "e")
+        df.columns = df.columns.str.replace("í", "i")
+        df.columns = df.columns.str.replace("ó", "o")
+        df.columns = df.columns.str.replace("ú", "u")
+        df.columns = df.columns.str.replace("Ñ", "n")
+        df.columns = df.columns.str.replace("Á", "a")
+        df.columns = df.columns.str.replace("É", "e")
+        df.columns = df.columns.str.replace("Í", "i")
+        df.columns = df.columns.str.replace("Ó", "o")
+        df.columns = df.columns.str.replace("Ú", "u")
+        df.columns = df.columns.str.replace("$.", "")"""
+    
+      if (limp_2):
+        # se pasa todo a minuscula
+        for x in df.columns:
+          if df[x].dtype == 'object':
+            df[x] = df[x].str.lower()
+        cont_limpieza += 1
+
+      if (limp_3):
+        # convertir en mayuscula la primera letra de cada palabra
+        #La primera letra de cada palabra se pone en mayuscula para mayor estetica
+        for x in df.columns:
+          if df[x].dtype == 'object':
+            df[x] = df[x].str.title()
+
+        cont_limpieza += 1
+
+      if (limp_4):
+        #eliminar filas duplicadas
+        df = df.drop_duplicates()
+        cont_limpieza += 1
+
+      if (limp_5):
+        #eliminar filas con valores nulos (NaN)
+        df = df.dropna()
+      
+      if (limp_6):
+        #cambiar tipos de valores
+        # se pide el nombre de la variable que contiene el monto vendido y la fecha
+        monto_var = st.multiselect(
+            "Selecciona la variable del monto vendido",
+            list(df.columns) 
+        )
+
+        # Selection variable de productos
+        fecha_var = st.multiselect(
+            "Selecciona la variable de la fecha",
+            list(df.columns)
+        )
+
+        if len(monto_var)==1 and len(fecha_var)==1:
+          # Para el monto se convierte la variable a tipo numérico (int64) ya que es tipo texto (object)
+          df[monto_var[0]].replace(regex={'Q.': ''} ,inplace=True)
+          df[monto_var[0]] = pd.to_numeric(df[monto_var[0]])
+
+          # Para la fecha se convierte la variable a tipo date (ns) ya que es tipo texto (object)
+          df[fecha_var[0]] = pd.to_datetime(df[fecha_var[0]])
+          cont_limpieza += 1
+        else:
+          st.warning("Selecciona una variable en cada campo")
+
+      if (cont_limpieza==suma_limp):
+        st.success('Limpieza terminada! 🎉')
+        df.to_pandas()
+        st.markdown('Conjunto de datos limpios')
+        st.write(df)
+
+        csv_clean = convert_df(df)
+        st.download_button(
+            label="Descargar datos limpios",
+            data=csv_clean,
+            file_name='datosLimpios.csv',
+            mime='text/csv',
+        )
   else:
    # si no sube archivo de datos para limpiar
     st.warning("Por favor, sube tu archivo .csv antes de continuar")
