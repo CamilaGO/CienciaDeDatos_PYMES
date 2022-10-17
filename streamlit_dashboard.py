@@ -98,7 +98,6 @@ if selected == "Limpieza":
       limp_4 = st.checkbox('Eliminar filas duplicadas')
       limp_5 = st.checkbox('Eliminar valores nulos')
       limp_6 = st.checkbox('Cambiar los tipos de datos')
-      cont_limpieza = 0
       suma_limp = limp_1 + limp_2 + limp_3 + limp_4 + limp_5 + limp_6
       if (limp_1):
         # se eliminan los caracteres especiales
@@ -123,9 +122,8 @@ if selected == "Limpieza":
                           'Ä', 'A','Ë', 'E','Ï', 'I','Ö', 'O','Ü', 'U',
                           'Ã', 'A','Ẽ', 'E', 'Õ','O']
         for i in special_charac:
-          df.columns = df.columns.str.replace(special_charac[i], special_charac[i+1])
+          df.columns = df.columns.str.replace(i, i+1)
           i = i + 2
-        cont_limpieza += 1
         """df.columns = df.columns.str.replace(";", "")
         df.columns = df.columns.str.replace("ñ", "n")
         df.columns = df.columns.str.replace("á", "a")
@@ -146,7 +144,6 @@ if selected == "Limpieza":
         for x in df.columns:
           if df[x].dtype == 'object':
             df[x] = df[x].str.lower()
-        cont_limpieza += 1
 
       if (limp_3):
         # convertir en mayuscula la primera letra de cada palabra
@@ -155,12 +152,9 @@ if selected == "Limpieza":
           if df[x].dtype == 'object':
             df[x] = df[x].str.title()
 
-        cont_limpieza += 1
-
       if (limp_4):
         #eliminar filas duplicadas
         df = df.drop_duplicates()
-        cont_limpieza += 1
 
       if (limp_5):
         #eliminar filas con valores nulos (NaN)
@@ -187,23 +181,25 @@ if selected == "Limpieza":
 
           # Para la fecha se convierte la variable a tipo date (ns) ya que es tipo texto (object)
           df[fecha_var[0]] = pd.to_datetime(df[fecha_var[0]])
-          cont_limpieza += 1
         else:
           st.warning("Selecciona una variable en cada campo")
 
-      if (cont_limpieza==suma_limp):
-        st.success('Limpieza terminada! 🎉')
-        df.to_pandas()
-        st.markdown('Conjunto de datos limpios')
-        st.write(df)
+      if (suma_limp>0):
+        if st.button('Ver resultados de limpieza'):
+          st.success('Limpieza terminada! 🎉')
+          df.to_pandas()
+          st.markdown('Conjunto de datos limpios:')
+          st.write(df)
 
-        csv_clean = convert_df(df)
-        st.download_button(
-            label="Descargar datos limpios",
-            data=csv_clean,
-            file_name='datosLimpios.csv',
-            mime='text/csv',
-        )
+          csv_clean = convert_df(df)
+          st.download_button(
+              label="Descargar datos limpios",
+              data=csv_clean,
+              file_name='datosLimpios.csv',
+              mime='text/csv',
+          )
+      else:
+        st.write('Debes seleccionar mínimo 1 técnica de limpieza')
   else:
    # si no sube archivo de datos para limpiar
     st.warning("Por favor, sube tu archivo .csv antes de continuar")
