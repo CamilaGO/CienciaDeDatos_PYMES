@@ -122,7 +122,7 @@ if selected == "Limpieza":
                           'Ä', 'A','Ë', 'E','Ï', 'I','Ö', 'O','Ü', 'U',
                           'Ã', 'A','Ẽ', 'E', 'Õ','O']
         for i in special_charac:
-          df.columns = df.columns.str.replace(i, i+1)
+          df.columns = df.columns.str.replace(special_charac[i], special_charac[i+1])
           i = i + 2
         """df.columns = df.columns.str.replace(";", "")
         df.columns = df.columns.str.replace("ñ", "n")
