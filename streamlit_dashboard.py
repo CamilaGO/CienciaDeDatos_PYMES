@@ -60,7 +60,6 @@ if selected == "Limpieza":
       # ------------------  Explorar dataframe ------------------
       # ___________ exploracion general ___________
       st.text("")
-      st.markdown(f'<h1 style="color:#33ff33;font-size:24px;">{"Exploración general"}</h1>', unsafe_allow_html=True)
       st.info('Exploración general')
       df.to_pandas()
       st.write(df.head(), df.shape) # primeras 5 filas del dataframe y sus dimensiones
@@ -70,7 +69,8 @@ if selected == "Limpieza":
       s = buffer.getvalue()
       st.text(s)
       # estadisticas basicas
-      st.write("\nEstadisticas básicas de las columnas", df.describe())
+      st.write("\nEstadisticas básicas de las columnas")
+      st.write(df.describe(include=object))
       #filas duplicadas
       st.write("Total de filas duplicadas: ", df.duplicated().sum())
       # filas con valores nulos
