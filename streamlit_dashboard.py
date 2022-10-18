@@ -60,6 +60,7 @@ if selected == "Limpieza":
       # ------------------  Explorar dataframe ------------------
       # ___________ exploracion general ___________
       st.text("")
+      st.markdown(f'<h1 style="color:#33ff33;font-size:24px;">{"Exploración general"}</h1>', unsafe_allow_html=True)
       st.info('Exploración general')
       df.to_pandas()
       st.write(df.head(), df.shape) # primeras 5 filas del dataframe y sus dimensiones
@@ -69,8 +70,7 @@ if selected == "Limpieza":
       s = buffer.getvalue()
       st.text(s)
       # estadisticas basicas
-      st.write("Estadisticas básicas de las columnas numéricas", df.describe())
-      st.write("Estadisticas básicas de todas las columnas", df.describe(include=object))
+      st.write("\nEstadisticas básicas de las columnas", df.describe())
       #filas duplicadas
       st.write("Total de filas duplicadas: ", df.duplicated().sum())
       # filas con valores nulos
@@ -84,7 +84,7 @@ if selected == "Limpieza":
           list(df.columns)
       )
       # contar valores unicos
-      st.write('Valores únicos en la columna seleccionada: ',df[var_explore].value_counts())
+      st.write('Valores únicos en la columna seleccionada: ')
       st.table(df[var_explore].value_counts().head())
 
       # ------------------  Limpiar dataframe ------------------
@@ -215,7 +215,7 @@ if selected == "Limpieza":
               mime='text/csv',
           )
       else:
-        st.write('Debes seleccionar mínimo 1 técnica de limpieza')
+        st.warning('Debes seleccionar mínimo 1 técnica de limpieza')
   else:
    # si no sube archivo de datos para limpiar
     st.warning("Por favor, sube tu archivo .csv antes de continuar")
