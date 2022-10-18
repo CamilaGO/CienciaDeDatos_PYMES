@@ -71,7 +71,7 @@ if selected == "Limpieza":
       # estadisticas basicas
       st.write("\nEstadisticas básicas de las columnas")
       st.write(df.describe(include=object))
-      st.write(df.describe(include=int64))
+      st.write(df.describe(include='all'))
       #filas duplicadas
       st.write("\nTotal de filas duplicadas: ", df.duplicated().sum())
       # filas con valores nulos
