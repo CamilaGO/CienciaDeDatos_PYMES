@@ -71,8 +71,9 @@ if selected == "Limpieza":
       # estadisticas basicas
       st.write("\nEstadisticas básicas de las columnas")
       st.write(df.describe(include=object))
+      st.write(df.describe(include=int64))
       #filas duplicadas
-      st.write("Total de filas duplicadas: ", df.duplicated().sum())
+      st.write("\nTotal de filas duplicadas: ", df.duplicated().sum())
       # filas con valores nulos
       st.write("Total de filas con valores nulos: ", np.count_nonzero(df.isnull()))
       # ___________ exploracion enfocada en una variable ___________
