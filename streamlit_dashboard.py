@@ -200,7 +200,7 @@ if selected == "Limpieza":
           st.success('Limpieza terminada! 🎉')
           df.to_pandas()
           st.markdown('Conjunto de datos limpios:')
-          st.write(df)
+          st.write(df.head())
           # informacion del dataframe
           buffer = io.StringIO()
           df.info(buf=buffer)
