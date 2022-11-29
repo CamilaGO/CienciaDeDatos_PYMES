@@ -239,7 +239,6 @@ elif selected == "Exploración":
 
     if reporte_type == 'Lux':
       # ******* Lux **********
-      df.to_pandas()
       st.write('Reporte interactivo Lux')
       html_content = df.save_as_html('reporteLux.html',output=True)
       st.download_button(
@@ -254,7 +253,6 @@ elif selected == "Exploración":
           "Selecciona las variables",
           list(df.columns),
       )
-      st.write(columns_options)
       df.intent = columns_options
       html_content = df.save_as_html('reporteLux_columselec.html',output=True)
       st.download_button(
