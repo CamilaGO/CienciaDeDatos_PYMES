@@ -254,7 +254,8 @@ elif selected == "Exploración":
           "Selecciona las variables",
           list(df.columns),
       )
-      df.intent = [columns_options]
+      print(columns_options)
+      df.intent = columns_options
       html_content = df.save_as_html('reporteLux_columselec.html',output=True)
       st.download_button(
         label='Descargar reporte enfocado HTML',
