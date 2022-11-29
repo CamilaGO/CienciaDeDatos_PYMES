@@ -92,7 +92,7 @@ if selected == "Limpieza":
       st.info('¡Limpieza de datos!')
       st.write('Selecciona las técnicas de limpieza que deseas realizar:')
       limp_1 = st.checkbox('Eliminar caracteres especiales')
-      limp_2 = st.checkbox('Cambiar mayúsculas a minúsuclas')
+      limp_2 = st.checkbox('Cambiar mayúsculas a minúsculas')
       limp_3 = st.checkbox('Convertir en mayúscula la primera letra de cada palabra')
       limp_4 = st.checkbox('Eliminar filas duplicadas')
       limp_5 = st.checkbox('Eliminar valores nulos')
@@ -239,6 +239,7 @@ elif selected == "Exploración":
 
     if reporte_type == 'Lux':
       # ******* Lux **********
+      df.to_pandas()
       st.write('Reporte interactivo Lux')
       html_content = df.save_as_html('reporteLux.html',output=True)
       st.download_button(
@@ -309,7 +310,6 @@ elif selected == "Modelos":
     )
 
     if len(prod_var)==1 and len(date_var)==1:
-      st.success('Datos categorizados! 🎉')
       # Extraer la información de la variable fecha
       df["Anio"]=pd.to_datetime(df[date_var[0]]).dt.year
       df["Mes"]=pd.to_datetime(df[date_var[0]]).dt.month
@@ -340,6 +340,7 @@ elif selected == "Modelos":
       # Modificar la columna de la categoria con el numero del producto segun las categorias creadas
       df['prod_categoria'] = df.prod_categoria.cat.codes
 
+      st.success('Datos categorizados! 🎉')
       df.to_pandas()
       st.write(df)
     else:
