@@ -10,3 +10,8 @@ mlxtend
 sklearn
 statsmodels
 scipy
+nltk
+re
+time
+random
+warnings
